@@ -32,18 +32,49 @@ namespace Eleições
 
             // Iniciar mecanismo randômico
 
-            Random rdm = new Random();
+            Random Rnd = new Random();
 
-            // Atribuição de voto Brancos
+            //atribuição de votos
 
-            for (int i = 0; i < Quantidade_Votos.Value; i++)
+            for(int i = 0; i < Quantidade_Votos.Value; i++)
             {
-                if (rdm.Next(1, 100) <= track_votos_brancos.Value) //se a frequencia estiver entre 1 e 100 no trackbar, ele atribuirá votos no Nome Branco
+                //definir se para atribuir voto Branco
+                if(Rnd.Next(0, 100) < track_votos_brancos.Value)
                 {
                     lista_candidato.Where(x => x.Nome == "BRANCOS").First().Votos++;
                     continue;
+                   
                 }
+                if(Rnd.Next(0,100) < track_votos_nulos.Value)
+                {
+                    lista_candidato.Where(x => x.Nome == "NULOS").First() .Votos++;
+                    continue;
+                }
+
+                //atribuir votos aos candidatos
+                lista_candidato[Rnd.Next(0, lista_candidato.Count - 2)].Votos++;
             }
+            //apresentar os resultados
+            Resultado_Eleições.Items.Clear();
+            var candidatos = lista_candidato.Where(x => x.Nome != "BRANCOS" && x.Nome != "NULOS");
+            int posição = 1;
+            foreach(var candidato in candidatos)
+            {
+                Resultado_Eleições.Items.Add(posição.ToString() + "° " + ConstroiLinha(candidato));
+                posição++;
+            }
+                      
+              
+        }
+        private string ConstroiLinha(Candidatos item)
+        {
+            //construir a linha de resultados
+            StringBuilder sb = new StringBuilder();
+            sb.Append(item.Nome);
+            sb.Append(new string('.', 30 - item.Nome.Length));
+            sb.Append(item.Votos);
+            return sb.ToString();
+
         }
 
 

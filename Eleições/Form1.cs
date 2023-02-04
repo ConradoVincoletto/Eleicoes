@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,12 +64,20 @@ namespace Eleições
                 Resultado_Eleições.Items.Add(posição.ToString() + "° " + ConstroiLinha(candidato));
                 posição++;
             }
+            //apresentar brancos e nulos
+            Resultado_Eleições.Items.Add(" ");
+            var outros_resultados = lista_candidato.Where(x => x.Nome == "BRANCOS" || x.Nome == "NULOS");
+            foreach(var outro_resultado in outros_resultados)
+            {
+                Resultado_Eleições.Items.Add(outro_resultado.Nome.ToString() + ConstroiLinha(outro_resultado));
+            }
                       
               
         }
         private string ConstroiLinha(Candidatos item)
         {
             //construir a linha de resultados
+            
             StringBuilder sb = new StringBuilder();
             sb.Append(item.Nome);
             sb.Append(new string('.', 30 - item.Nome.Length));
